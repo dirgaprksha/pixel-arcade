@@ -1,0 +1,9 @@
+[package]
+name = "pixelate"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+image = { version = "0.25", default-features = false, features = ["png"] }
+softbuffer = "0.4"
+winit = "0.30"

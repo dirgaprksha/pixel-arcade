@@ -1,0 +1,7 @@
+[workspace]
+members = [
+  "crates/pixelate-engine",
+  "crates/tic-tac-toe"
+]
+
+resolver = "2"
