@@ -1,4 +1,4 @@
-use crate::{AssetError, ImageData};
+use crate::{log_info, log_warn, AssetError, ImageData};
 use image::{load_from_memory, GenericImageView};
 use std::{collections::HashMap, fs::read};
 
@@ -17,6 +17,7 @@ impl AssetManager {
     // Loads an image from specified path
     pub fn load_image(&mut self, path: &str) -> Result<bool, AssetError> {
         if self.image_cache.contains_key(path) {
+            log_warn!("Assets", "Image already loaded: {}", path);
             return Ok(false);
         }
 
@@ -38,6 +39,8 @@ impl AssetManager {
             ImageData::from_bytes(rgba_bytes, width, height),
         );
 
+        log_info!("Assets", "Loaded image '{}' ({}x{})", path, width, height);
+
         Ok(true)
     }
 
@@ -57,11 +60,17 @@ impl AssetManager {
 
     // Unloads an image from memory
     pub fn unload_image(&mut self, path: &str) -> bool {
-        self.image_cache.remove(path).is_some()
+        let removed = self.image_cache.remove(path).is_some();
+        if removed {
+            log_info!("Assets", "Unloaded image '{}'", path);
+        }
+        removed
     }
 
     // Clears all loaded images from memory
     pub fn clear_all(&mut self) {
+        let count = self.image_cache.len();
         self.image_cache.clear();
+        log_info!("Assets", "Cleared {} images from cache", count);
     }
 }

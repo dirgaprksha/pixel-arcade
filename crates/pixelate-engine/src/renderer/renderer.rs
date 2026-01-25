@@ -1,5 +1,5 @@
 use super::RendererError;
-use crate::{assets::ImageData, window::Window};
+use crate::{assets::ImageData, log_debug, log_info, window::Window};
 use softbuffer::{Context, Surface};
 use std::{num::NonZeroU32, sync::Arc};
 use winit::window::Window as WinitWindow;
@@ -24,6 +24,8 @@ impl Renderer {
 
         let (width, height) = window.inner_size();
 
+        log_info!("Renderer", "Created renderer ({}x{})", width, height);
+
         Ok(Self {
             surface,
             buffer: vec![0; (width * height) as usize],
@@ -37,6 +39,15 @@ impl Renderer {
         if self.width == width && self.height == height {
             return Ok(());
         }
+
+        log_debug!(
+            "Renderer",
+            "Resizing from {}x{} to {}x{}",
+            self.width,
+            self.height,
+            width,
+            height
+        );
 
         self.width = width;
         self.height = height;
