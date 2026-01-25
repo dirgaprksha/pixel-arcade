@@ -1,4 +1,5 @@
 use super::{configuration::WindowConfiguration, error::WindowError};
+use crate::log_info;
 use std::sync::Arc;
 use winit::{
     dpi::LogicalSize,
@@ -32,6 +33,14 @@ impl Window {
                     ),
                 })?;
 
+        log_info!(
+            "Window",
+            "Created window '{}' ({}x{})",
+            config.title,
+            config.width,
+            config.height
+        );
+
         Ok(Self {
             inner_window: Arc::new(window),
         })
@@ -57,5 +66,10 @@ impl Window {
         let size = self.inner_window.inner_size();
 
         (size.width, size.height)
+    }
+
+    // Requests a redraw of window
+    pub fn request_redraw(&self) {
+        self.inner_window.request_redraw();
     }
 }
